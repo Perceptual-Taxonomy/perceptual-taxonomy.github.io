@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PercepTax: Perceptual Taxonomy for Vision-Language Models</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #FDFBF7;
+            --color-bg-alt: #F5F1EA;
+            --color-text: #1A1A1A;
+            --color-text-muted: #5C5C5C;
+            --color-accent: #2563EB;
+            --color-accent-light: #DBEAFE;
+            --color-taxonomy-material: #F59E0B;
+            --color-taxonomy-affordance: #10B981;
+            --color-taxonomy-function: #8B5CF6;
+            --color-taxonomy-physical: #EC4899;
+            --color-border: #E5E1D8;
+            --font-serif: 'Instrument Serif', Georgia, serif;
+            --font-sans: 'DM Sans', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.7;
+            font-size: 17px;
+            overflow-x: hidden;
+        }
+
+        /* Noise texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.25rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(253, 251, 247, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--color-border);
+            transition: all 0.3s ease;
+        }
+
+        .nav-logo {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--color-text);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-text);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 8rem 3rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--color-bg-alt);
+            border: 1px solid var(--color-border);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .hero h1 {
+            font-family: var(--font-serif);
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-weight: 400;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.4s;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--color-accent);
+        }
+
+        .hero-subtitle {
+            font-size: 1.35rem;
+            color: var(--color-text-muted);
+            max-width: 720px;
+            line-height: 1.6;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.6s;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 4rem;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.8s;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-family: var(--font-serif);
+            font-size: 3rem;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 3rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 1s;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--color-text);
+            color: var(--color-bg);
+        }
+
+        .btn-primary:hover {
+            background: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-text);
+            border: 1px solid var(--color-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-bg-alt);
+            border-color: var(--color-text-muted);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero Visual */
+        .hero-visual {
+            position: absolute;
+            right: -5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45%;
+            max-width: 650px;
+            opacity: 0;
+            animation: fadeIn 1.2s ease forwards;
+            animation-delay: 1.2s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .taxonomy-diagram {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+        }
+
+        .taxonomy-node {
+            position: absolute;
+            background: white;
+            border-radius: 16px;
+            padding: 1.25rem 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid var(--color-border);
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .taxonomy-node::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            border-radius: 4px;
+        }
+
+        .node-scene {
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation-delay: 0s;
+        }
+
+        .node-scene::before { background: var(--color-accent); }
+
+        .node-object {
+            top: 35%;
+            left: 25%;
+            animation-delay: 0.5s;
+        }
+
+        .node-object::before { background: #6B7280; }
+
+        .node-material {
+            top: 60%;
+            left: 5%;
+            animation-delay: 1s;
+        }
+
+        .node-material::before { background: var(--color-taxonomy-material); }
+
+        .node-affordance {
+            top: 60%;
+            left: 35%;
+            animation-delay: 1.5s;
+        }
+
+        .node-affordance::before { background: var(--color-taxonomy-affordance); }
+
+        .node-function {
+            top: 60%;
+            left: 65%;
+            animation-delay: 2s;
+        }
+
+        .node-function::before { background: var(--color-taxonomy-function); }
+
+        .node-physical {
+            top: 85%;
+            left: 45%;
+            transform: translateX(-50%);
+            animation-delay: 2.5s;
+        }
+
+        .node-physical::before { background: var(--color-taxonomy-physical); }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .node-scene { animation: float 6s ease-in-out infinite; }
+        .node-object { animation: float 6s ease-in-out infinite 0.5s; }
+        .node-material { animation: float 6s ease-in-out infinite 1s; }
+        .node-affordance { animation: float 6s ease-in-out infinite 1.5s; }
+        .node-function { animation: float 6s ease-in-out infinite 2s; }
+        .node-physical { animation: float 6s ease-in-out infinite 2.5s; }
+
+        /* Section Styles */
+        section {
+            padding: 6rem 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--color-accent);
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        /* Abstract Section */
+        #abstract {
+            background: var(--color-bg-alt);
+            max-width: none;
+            padding: 6rem 3rem;
+        }
+
+        .abstract-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .abstract-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--color-text-muted);
+        }
+
+        .abstract-text strong {
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        /* Taxonomy Section */
+        .taxonomy-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .taxonomy-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--color-border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .taxonomy-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        .taxonomy-card:nth-child(1)::before { background: var(--color-taxonomy-material); }
+        .taxonomy-card:nth-child(2)::before { background: var(--color-taxonomy-physical); }
+        .taxonomy-card:nth-child(3)::before { background: var(--color-taxonomy-affordance); }
+        .taxonomy-card:nth-child(4)::before { background: var(--color-taxonomy-function); }
+
+        .taxonomy-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        }
+
+        .taxonomy-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .taxonomy-card:nth-child(1) .taxonomy-icon { background: #FEF3C7; }
+        .taxonomy-card:nth-child(2) .taxonomy-icon { background: #FCE7F3; }
+        .taxonomy-card:nth-child(3) .taxonomy-icon { background: #D1FAE5; }
+        .taxonomy-card:nth-child(4) .taxonomy-icon { background: #EDE9FE; }
+
+        .taxonomy-card h3 {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 0.75rem;
+        }
+
+        .taxonomy-card p {
+            font-size: 0.95rem;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        .taxonomy-count {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--color-border);
+        }
+
+        /* Benchmark Section */
+        .benchmark-overview {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-top: 3rem;
+        }
+
+        .benchmark-visual {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--color-border);
+        }
+
+        .question-types {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .question-type {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: var(--color-bg);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .question-type:hover {
+            background: var(--color-bg-alt);
+            transform: translateX(8px);
+        }
+
+        .qt-number {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            width: 24px;
+        }
+
+        .qt-name {
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .qt-bar {
+            width: 120px;
+            height: 6px;
+            background: var(--color-border);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .qt-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+
+        .qt-fill.obj { width: 75%; background: var(--color-accent); }
+        .qt-fill.spatial { width: 60%; background: var(--color-taxonomy-affordance); }
+        .qt-fill.attr { width: 85%; background: var(--color-taxonomy-material); }
+        .qt-fill.tax { width: 95%; background: var(--color-taxonomy-function); }
+
+        .benchmark-details h3 {
+            font-family: var(--font-serif);
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .benchmark-details p {
+            color: var(--color-text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .benchmark-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .benchmark-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .benchmark-list li::before {
+            content: '→';
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        /* Results Section */
+        #results {
+            background: var(--color-text);
+            color: var(--color-bg);
+            max-width: none;
+            padding: 6rem 3rem;
+        }
+
+        .results-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        #results .section-label {
+            color: var(--color-accent-light);
+        }
+
+        #results .section-title {
+            color: var(--color-bg);
+        }
+
+        .results-table {
+            margin-top: 3rem;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        th {
+            text-align: left;
+            padding: 1rem;
+            font-weight: 500;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        tr:hover td {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .model-name {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .model-tag {
+            font-size: 0.65rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: var(--color-accent);
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .model-tag.open {
+            background: var(--color-taxonomy-affordance);
+        }
+
+        .score-high { color: var(--color-taxonomy-affordance); }
+        .score-mid { color: var(--color-taxonomy-material); }
+        .score-low { color: var(--color-taxonomy-physical); }
+
+        .insight-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 4rem;
+        }
+
+        .insight-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .insight-card h4 {
+            font-family: var(--font-serif);
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .insight-card p {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.6;
+        }
+
+        /* Example Section */
+        .example-container {
+            margin-top: 3rem;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid var(--color-border);
+        }
+
+        .example-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem 2rem;
+            background: var(--color-bg-alt);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .example-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .example-dot:nth-child(1) { background: #FF5F56; }
+        .example-dot:nth-child(2) { background: #FFBD2E; }
+        .example-dot:nth-child(3) { background: #27CA40; }
+
+        .example-body {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 400px;
+        }
+
+        .example-image {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .example-image-placeholder {
+            width: 100%;
+            height: 300px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+            border: 2px dashed rgba(255,255,255,0.3);
+        }
+
+        .example-qa {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .example-question {
+            background: var(--color-bg);
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        .example-question-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--color-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+        }
+
+        .example-question p {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .example-reasoning {
+            flex: 1;
+        }
+
+        .example-reasoning-label {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--color-taxonomy-function);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+        }
+
+        .example-reasoning p {
+            font-size: 0.95rem;
+            color: var(--color-text-muted);
+            line-height: 1.7;
+        }
+
+        .example-answer {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.25rem;
+            background: var(--color-taxonomy-affordance);
+            color: white;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        /* Citation Section */
+        #citation {
+            background: var(--color-bg-alt);
+            max-width: none;
+            padding: 4rem 3rem;
+        }
+
+        .citation-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .bibtex-container {
+            margin-top: 2rem;
+            background: var(--color-text);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .bibtex-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .bibtex-header span {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .copy-btn {
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .bibtex-code {
+            padding: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 3rem;
+            text-align: center;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-text);
+        }
+
+        .footer-text {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-visual {
+                display: none;
+            }
+
+            .taxonomy-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .benchmark-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .insight-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 6rem 1.5rem 3rem;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .hero-stats {
+                gap: 2rem;
+            }
+
+            .taxonomy-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .example-body {
+                grid-template-columns: 1fr;
+            }
+
+            .example-image {
+                min-height: 200px;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            th, td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+
+        /* Scroll animations */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="nav-logo">PercepTax</a>
+        <ul class="nav-links">
+            <li><a href="#abstract">Abstract</a></li>
+            <li><a href="#taxonomy">Taxonomy</a></li>
+            <li><a href="#benchmark">Benchmark</a></li>
+            <li><a href="#results">Results</a></li>
+            <li><a href="#citation">Citation</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-content">
+            <!-- <div class="hero-badge">
+                <span>CVPR 2026 Submission</span>
+                <span>Preprint</span>
+            </div> -->
+            <h1>Perceptual Taxonomy:<br><em>Evaluating Hierarchical</em><br>Scene Reasoning in VLMs</h1>
+            <p class="hero-subtitle">A structured process of scene understanding that first recognizes objects and their spatial configurations, then infers task-relevant properties to support goal-directed reasoning.</p>
+            
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-value">28K+</span>
+                    <span class="stat-label">Questions</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">5,802</span>
+                    <span class="stat-label">Images</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">84</span>
+                    <span class="stat-label">Attributes</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value">3,173</span>
+                    <span class="stat-label">Object Classes</span>
+                </div>
+            </div>
+
+            <div class="hero-actions">
+                <a href="#" class="btn btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    Read Paper
+                </a>
+                <a href="#" class="btn btn-secondary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    Code & Data
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="taxonomy-diagram">
+                <div class="taxonomy-node node-scene">Scene Context</div>
+                <div class="taxonomy-node node-object">Object Recognition</div>
+                <div class="taxonomy-node node-material">Material</div>
+                <div class="taxonomy-node node-affordance">Affordance</div>
+                <div class="taxonomy-node node-function">Function</div>
+                <div class="taxonomy-node node-physical">Physical Props</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="abstract">
+        <div class="abstract-content">
+            <div class="section-header">
+                <p class="section-label">Abstract</p>
+            </div>
+            <p class="abstract-text">
+                We propose <strong>Perceptual Taxonomy</strong>, a structured process of scene understanding that first recognizes objects and their spatial configurations, then infers task-relevant properties, such as <strong>material</strong>, <strong>affordance</strong>, and <strong>function</strong> to support goal-directed reasoning. While this form of reasoning is fundamental to human cognition, current vision-language benchmarks lack comprehensive evaluation of this ability.
+                <br><br>
+                To address this gap, we introduce <strong>PercepTax</strong>, a benchmark for physically grounded visual reasoning. We annotate <strong>3,173 objects</strong> with four property families covering <strong>84 fine-grained attributes</strong>. Based on these annotations, we construct a multiple-choice question benchmark with <strong>5,802 images</strong> spanning both synthetic and real domains, including <strong>28,033 template-based questions</strong> and <strong>50 expert-crafted questions</strong>.
+                <br><br>
+                Experimental results reveal that leading VLMs perform well on recognition tasks but <strong>degrade significantly by 10-20%</strong> on property-driven questions, especially those requiring multi-step reasoning over structured attributes.
+            </p>
+        </div>
+    </section>
+
+    <section id="taxonomy">
+        <div class="section-header">
+            <p class="section-label">Property Taxonomy</p>
+            <h2 class="section-title">Four Pillars of Perceptual Understanding</h2>
+        </div>
+        
+        <div class="taxonomy-grid animate-on-scroll">
+            <div class="taxonomy-card">
+                <div class="taxonomy-icon">🧱</div>
+                <h3>Material</h3>
+                <p>The object's visual and physical substance (e.g., paper, metal, wood), determining rigidity, weight, texture, and durability.</p>
+                <p class="taxonomy-count">17 types annotated</p>
+            </div>
+            <div class="taxonomy-card">
+                <div class="taxonomy-icon">⚖️</div>
+                <h3>Physical Properties</h3>
+                <p>Intrinsic physical characteristics governing behavior under external forces: rigidity, fragility, elasticity, mass, stability.</p>
+                <p class="taxonomy-count">18 properties defined</p>
+            </div>
+            <div class="taxonomy-card">
+                <div class="taxonomy-icon">🤲</div>
+                <h3>Affordance</h3>
+                <p>Actions or interactions the object enables based on shape and components: graspable, supportable, containable.</p>
+                <p class="taxonomy-count">26 affordances mapped</p>
+            </div>
+            <div class="taxonomy-card">
+                <div class="taxonomy-icon">🎯</div>
+                <h3>Function</h3>
+                <p>The object's intended or contextual role: seating furniture, storage container, display signage, and more.</p>
+                <p class="taxonomy-count">23 functions categorized</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="benchmark">
+        <div class="section-header">
+            <p class="section-label">Benchmark Design</p>
+            <h2 class="section-title">Four Question Types for Complete Evaluation</h2>
+        </div>
+
+        <div class="benchmark-overview animate-on-scroll">
+            <div class="benchmark-visual">
+                <div class="question-types">
+                    <div class="question-type">
+                        <span class="qt-number">01</span>
+                        <span class="qt-name">Object Description</span>
+                        <div class="qt-bar"><div class="qt-fill obj"></div></div>
+                    </div>
+                    <div class="question-type">
+                        <span class="qt-number">02</span>
+                        <span class="qt-name">Spatial Reasoning</span>
+                        <div class="qt-bar"><div class="qt-fill spatial"></div></div>
+                    </div>
+                    <div class="question-type">
+                        <span class="qt-number">03</span>
+                        <span class="qt-name">Attribute Matching</span>
+                        <div class="qt-bar"><div class="qt-fill attr"></div></div>
+                    </div>
+                    <div class="question-type">
+                        <span class="qt-number">04</span>
+                        <span class="qt-name">Taxonomy Reasoning</span>
+                        <div class="qt-bar"><div class="qt-fill tax"></div></div>
+                    </div>
+                </div>
+            </div>
+            <div class="benchmark-details">
+                <h3>From Recognition to Reasoning</h3>
+                <p>Our benchmark systematically evaluates the full spectrum of perceptual taxonomy, from basic object identification to complex multi-step reasoning over physical properties.</p>
+                <ul class="benchmark-list">
+                    <li><strong>Object Description:</strong> Match descriptions to color-coded bounding boxes based on material, properties, affordances, or function</li>
+                    <li><strong>Spatial Reasoning:</strong> Identify left/right, above/below, front/behind relations between objects</li>
+                    <li><strong>Attribute Matching:</strong> Associate specific physical or functional attributes with correct objects</li>
+                    <li><strong>Taxonomy Reasoning:</strong> Multi-step inference combining affordances, materials, and functional compatibility</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="example">
+        <div class="section-header">
+            <p class="section-label">Example</p>
+            <h2 class="section-title">Taxonomy Reasoning in Action</h2>
+        </div>
+
+        <div class="example-container animate-on-scroll">
+            <div class="example-header">
+                <span class="example-dot"></span>
+                <span class="example-dot"></span>
+                <span class="example-dot"></span>
+            </div>
+            <div class="example-body">
+                <div class="example-image">
+                    <div class="example-image-placeholder">
+                        🏢 Office Scene with Multiple Objects<br>
+                        (monitor, bin, notebook, vending machine)
+                    </div>
+                </div>
+                <div class="example-qa">
+                    <div class="example-question">
+                        <p class="example-question-label">Question</p>
+                        <p>Which object can be used as a shield? Imagine a sudden impact toward you, what item in this scene could you hold to defend yourself?</p>
+                    </div>
+                    <div class="example-reasoning">
+                        <p class="example-reasoning-label">Taxonomy Reasoning</p>
+                        <p>A good improvised shield should have: a <strong>broad and flat surface</strong> to cover the torso or head, be <strong>rigid and durable</strong> enough to withstand impact, and be <strong>light enough to move quickly</strong>.<br><br>
+                        The notebook has a flat, rigid surface that is portable. The vending machine has a large rigid surface but is far too heavy to move. Therefore, the notebook could be repurposed as a shield.</p>
+                    </div>
+                    <div class="example-answer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Answer: Notebook (Green Box)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="results">
+        <div class="results-content">
+            <div class="section-header">
+                <p class="section-label">Experimental Results</p>
+                <h2 class="section-title">Revealing the Reasoning Gap</h2>
+            </div>
+
+            <div class="results-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Spatial</th>
+                            <th>Obj. Desc.</th>
+                            <th>Attr. Match</th>
+                            <th>Tax. Reason.</th>
+                            <th>Overall</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="model-name">Gemini 2.5 Pro <span class="model-tag">Closed</span></td>
+                            <td>73.32%</td>
+                            <td class="score-high">92.16%</td>
+                            <td>81.01%</td>
+                            <td>63.40%</td>
+                            <td class="score-high">77.97%</td>
+                        </tr>
+                        <tr>
+                            <td class="model-name">GPT-5 <span class="model-tag">Closed</span></td>
+                            <td>74.58%</td>
+                            <td>88.63%</td>
+                            <td>78.42%</td>
+                            <td>59.18%</td>
+                            <td>70.70%</td>
+                        </tr>
+                        <tr>
+                            <td class="model-name">Claude Sonnet 4.5 <span class="model-tag">Closed</span></td>
+                            <td>48.80%</td>
+                            <td>65.21%</td>
+                            <td>52.32%</td>
+                            <td>40.26%</td>
+                            <td>51.65%</td>
+                        </tr>
+                        <tr>
+                            <td class="model-name">Qwen3-VL-32B <span class="model-tag open">Open</span></td>
+                            <td class="score-high">74.30%</td>
+                            <td>84.31%</td>
+                            <td>74.19%</td>
+                            <td>48.78%</td>
+                            <td>64.07%</td>
+                        </tr>
+                        <tr>
+                            <td class="model-name">InternVL3.5-30B <span class="model-tag open">Open</span></td>
+                            <td>72.16%</td>
+                            <td>83.13%</td>
+                            <td>67.12%</td>
+                            <td>37.97%</td>
+                            <td>56.15%</td>
+                        </tr>
+                        <tr>
+                            <td class="model-name">Qwen3-VL-8B <span class="model-tag open">Open</span></td>
+                            <td>73.02%</td>
+                            <td>85.10%</td>
+                            <td>69.44%</td>
+                            <td>45.26%</td>
+                            <td>60.04%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="insight-cards">
+                <div class="insight-card">
+                    <h4>Recognition vs. Reasoning Gap</h4>
+                    <p>Even GPT-5 drops from 88.63% on object description to 59.18% on taxonomy reasoning—a 29+ point decline revealing weak property-level understanding.</p>
+                </div>
+                <div class="insight-card">
+                    <h4>Sim-to-Real Transfer</h4>
+                    <p>PercepTax ICL improves Gemini from 14 to 34 correct expert questions, demonstrating that hierarchical reasoning learned from simulation transfers to real-world scenarios.</p>
+                </div>
+                <div class="insight-card">
+                    <h4>Open-Source Progress</h4>
+                    <p>Qwen3-VL-32B achieves 74.30% on spatial reasoning, surpassing closed-source models and showing strong open-source competitiveness.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="citation">
+        <div class="citation-content">
+            <div class="section-header">
+                <p class="section-label">Citation</p>
+                <h2 class="section-title">Cite Our Work</h2>
+            </div>
+
+            <div class="bibtex-container">
+                <div class="bibtex-header">
+                    <span>BibTeX</span>
+                    <button class="copy-btn" onclick="copyBibtex()">Copy</button>
+                </div>
+                <pre class="bibtex-code">@inproceedings{perceptax2026,
+  title={Perceptual Taxonomy: Evaluating and Guiding 
+         Hierarchical Scene Reasoning in Vision-Language Models},
+  author={...},
+  booktitle={Preprint},
+  year={2026}
+}</pre>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#">Paper</a>
+                <a href="#">Code</a>
+                <a href="#">Dataset</a>
+                <a href="#">Leaderboard</a>
+            </div>
+            <!-- <p class="footer-text">CVPR 2026 Submission #130 · Anonymous Authors</p> -->
+        </div>
+    </footer>
+
+    <script>
+        // Copy BibTeX functionality
+        function copyBibtex() {
+            const bibtex = document.querySelector('.bibtex-code').textContent;
+            navigator.clipboard.writeText(bibtex).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        }
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Navbar scroll effect
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > 100) {
+                nav.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)';
+            } else {
+                nav.style.boxShadow = 'none';
+            }
+            
+            lastScroll = currentScroll;
+        });
+    </script>
+</body>
+</html>
