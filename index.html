@@ -172,10 +172,34 @@
             color: var(--color-text-muted);
             max-width: 720px;
             line-height: 1.6;
-            margin-bottom: 3rem;
+            margin-bottom: 2rem;
             opacity: 0;
             animation: fadeInUp 0.8s ease forwards;
             animation-delay: 0.6s;
+        }
+
+        .hero-authors {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem 1.25rem;
+            max-width: 720px;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.7s;
+        }
+
+        .author {
+            font-size: 0.95rem;
+            color: var(--color-text-muted);
+            position: relative;
+        }
+
+        .author:not(:last-child)::after {
+            content: '·';
+            position: absolute;
+            right: -0.65rem;
+            color: var(--color-border);
         }
 
         .hero-stats {
@@ -184,7 +208,7 @@
             flex-wrap: wrap;
             opacity: 0;
             animation: fadeInUp 0.8s ease forwards;
-            animation-delay: 0.8s;
+            animation-delay: 0.9s;
         }
 
         .stat {
@@ -212,7 +236,7 @@
             margin-top: 3rem;
             opacity: 0;
             animation: fadeInUp 0.8s ease forwards;
-            animation-delay: 1s;
+            animation-delay: 1.1s;
         }
 
         .btn {
@@ -996,12 +1020,26 @@
 
     <section class="hero">
         <div class="hero-content">
-            <!-- <div class="hero-badge">
-                <span>CVPR 2026 Submission</span>
-                <span>Preprint</span>
-            </div> -->
+            <div class="hero-badge">
+                <span>arXiv:2511.19526</span>
+            </div>
             <h1>Perceptual Taxonomy:<br><em>Evaluating Hierarchical</em><br>Scene Reasoning in VLMs</h1>
             <p class="hero-subtitle">A structured process of scene understanding that first recognizes objects and their spatial configurations, then infers task-relevant properties to support goal-directed reasoning.</p>
+            
+            <div class="hero-authors">
+                <span class="author">Jonathan Lee</span>
+                <span class="author">Xingrui Wang</span>
+                <span class="author">Jiawei Peng</span>
+                <span class="author">Luoxin Ye</span>
+                <span class="author">Zehan Zheng</span>
+                <span class="author">Tiezheng Zhang</span>
+                <span class="author">Tao Wang</span>
+                <span class="author">Wufei Ma</span>
+                <span class="author">Siyi Chen</span>
+                <span class="author">Yu-Cheng Chou</span>
+                <span class="author">Prakhar Kaushik</span>
+                <span class="author">Alan Yuille</span>
+            </div>
             
             <div class="hero-stats">
                 <div class="stat">
@@ -1023,7 +1061,7 @@
             </div>
 
             <div class="hero-actions">
-                <a href="#" class="btn btn-primary">
+                <a href="https://arxiv.org/abs/2511.19526" class="btn btn-primary" target="_blank" rel="noopener">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                     Read Paper
                 </a>
@@ -1278,12 +1316,15 @@
                     <span>BibTeX</span>
                     <button class="copy-btn" onclick="copyBibtex()">Copy</button>
                 </div>
-                <pre class="bibtex-code">@inproceedings{perceptax2026,
+                <pre class="bibtex-code">@article{lee2024perceptax,
   title={Perceptual Taxonomy: Evaluating and Guiding 
          Hierarchical Scene Reasoning in Vision-Language Models},
-  author={...},
-  booktitle={Preprint},
-  year={2026}
+  author={Lee, Jonathan and Wang, Xingrui and Peng, Jiawei and 
+          Ye, Luoxin and Zheng, Zehan and Zhang, Tiezheng and 
+          Wang, Tao and Ma, Wufei and Chen, Siyi and 
+          Chou, Yu-Cheng and Kaushik, Prakhar and Yuille, Alan},
+  journal={arXiv preprint arXiv:2511.19526},
+  year={2024}
 }</pre>
             </div>
         </div>
@@ -1292,12 +1333,12 @@
     <footer>
         <div class="footer-content">
             <div class="footer-links">
-                <a href="#">Paper</a>
+                <a href="https://arxiv.org/abs/2511.19526" target="_blank" rel="noopener">Paper</a>
                 <a href="#">Code</a>
                 <a href="#">Dataset</a>
                 <a href="#">Leaderboard</a>
             </div>
-            <!-- <p class="footer-text">CVPR 2026 Submission #130 · Anonymous Authors</p> -->
+            <p class="footer-text">Johns Hopkins University · arXiv:2511.19526</p>
         </div>
     </footer>
 
