@@ -6,7 +6,7 @@
     <title>PercepTax: Perceptual Taxonomy for Vision-Language Models</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --color-bg: #FDFBF7;
@@ -20,8 +20,10 @@
             --color-taxonomy-function: #8B5CF6;
             --color-taxonomy-physical: #EC4899;
             --color-border: #E5E1D8;
-            --font-serif: 'Instrument Serif', Georgia, serif;
-            --font-sans: 'DM Sans', system-ui, sans-serif;
+            --color-cross: #7C3AED;
+            --color-cross-light: #EDE9FE;
+            --font-serif: 'Inter', system-ui, sans-serif;
+            --font-sans: 'Inter', system-ui, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
         }
 
@@ -77,8 +79,8 @@
 
         .nav-logo {
             font-family: var(--font-serif);
-            font-size: 1.5rem;
-            font-weight: 400;
+            font-size: 1.4rem;
+            font-weight: 800;
             color: var(--color-text);
             text-decoration: none;
             letter-spacing: -0.02em;
@@ -152,10 +154,10 @@
 
         .hero h1 {
             font-family: var(--font-serif);
-            font-size: clamp(3rem, 7vw, 5.5rem);
-            font-weight: 400;
-            line-height: 1.1;
-            letter-spacing: -0.03em;
+            font-size: clamp(2.2rem, 4.6vw, 3.6rem);
+            font-weight: 800;
+            line-height: 1.12;
+            letter-spacing: -0.025em;
             margin-bottom: 1.5rem;
             opacity: 0;
             animation: fadeInUp 0.8s ease forwards;
@@ -163,8 +165,8 @@
         }
 
         .hero h1 em {
-            font-style: italic;
-            color: var(--color-accent);
+            font-style: normal;
+            color: var(--color-cross);
         }
 
         .hero-subtitle {
@@ -202,6 +204,49 @@
             color: var(--color-border);
         }
 
+        a.author {
+            text-decoration: underline;
+            text-decoration-color: var(--color-border);
+            text-underline-offset: 3px;
+            transition: text-decoration-color 0.2s ease, color 0.2s ease;
+        }
+        a.author:hover { color: var(--color-cross); text-decoration-color: var(--color-cross); }
+
+        .hero-authors { margin-bottom: 0.85rem; }
+
+        .hero-venue {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            letter-spacing: 0.03em;
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.8s;
+        }
+        .hero-venue span { color: var(--color-cross); font-weight: 700; }
+
+        .cross-eq {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0 0 2.25rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 0.65s;
+        }
+        .cross-plus { color: var(--color-text-muted); font-weight: 600; }
+        .cross-arrow { color: var(--color-cross); font-weight: 700; font-size: 1.2rem; margin: 0 0.15rem; }
+        .cross-answer {
+            font-weight: 700;
+            color: var(--color-cross);
+            background: var(--color-cross-light);
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            font-size: 0.9rem;
+        }
+
         .hero-stats {
             display: flex;
             gap: 4rem;
@@ -218,9 +263,9 @@
 
         .stat-value {
             font-family: var(--font-serif);
-            font-size: 3rem;
-            font-weight: 400;
-            letter-spacing: -0.02em;
+            font-size: 2.6rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
             line-height: 1;
         }
 
@@ -416,9 +461,9 @@
 
         .section-title {
             font-family: var(--font-serif);
-            font-size: clamp(2rem, 4vw, 3rem);
-            font-weight: 400;
-            letter-spacing: -0.02em;
+            font-size: clamp(1.7rem, 3vw, 2.4rem);
+            font-weight: 800;
+            letter-spacing: -0.025em;
             line-height: 1.2;
         }
 
@@ -1116,25 +1161,38 @@
     <section class="hero">
         <div class="hero-content">
             <div class="hero-badge">
-                <span>arXiv:2511.19526</span>
+                <span>ECCV 2026 · New task: Cross-Property Reasoning</span>
             </div>
             <h1>PercepTax:<br><em>Benchmarking Physical Intelligence through</em><br>Cross-Property Reasoning in VLMs</h1>
             <p class="hero-subtitle">A benchmark for <strong>perceptual taxonomy</strong> reasoning — testing whether vision-language models can jointly integrate <strong>material</strong>, <strong>physical</strong>, <strong>affordance</strong>, and <strong>functional</strong> properties to reason about physical scenes, beyond single-property recognition.</p>
             
+            <div class="cross-eq">
+                <span class="prop-chip material"><span class="dot"></span>Material</span>
+                <span class="cross-plus">+</span>
+                <span class="prop-chip physical"><span class="dot"></span>Physical</span>
+                <span class="cross-plus">+</span>
+                <span class="prop-chip affordance"><span class="dot"></span>Affordance</span>
+                <span class="cross-plus">+</span>
+                <span class="prop-chip function"><span class="dot"></span>Function</span>
+                <span class="cross-arrow">&rarr;</span>
+                <span class="cross-answer">grounded answer</span>
+            </div>
+
             <div class="hero-authors">
-                <span class="author">Jonathan Lee</span>
-                <span class="author">Xingrui Wang</span>
+                <span class="author">Jonathan Lee<sup>*</sup></span>
+                <a class="author" href="https://xingruiwang.github.io/" target="_blank" rel="noopener">Xingrui Wang<sup>*</sup></a>
                 <span class="author">Jiawei Peng</span>
                 <span class="author">Luoxin Ye</span>
                 <span class="author">Zehan Zheng</span>
                 <span class="author">Tiezheng Zhang</span>
                 <span class="author">Tao Wang</span>
-                <span class="author">Wufei Ma</span>
+                <a class="author" href="https://wufeim.github.io/" target="_blank" rel="noopener">Wufei Ma</a>
                 <span class="author">Siyi Chen</span>
-                <span class="author">Yu-Cheng Chou</span>
+                <a class="author" href="https://sites.google.com/view/yu-cheng-chou" target="_blank" rel="noopener">Yu-Cheng Chou</a>
                 <span class="author">Prakhar Kaushik</span>
-                <span class="author">Alan Yuille</span>
+                <a class="author" href="https://www.cs.jhu.edu/~ayuille/" target="_blank" rel="noopener">Alan Yuille</a>
             </div>
+            <div class="hero-venue"><span>ECCV 2026</span> &middot; Johns Hopkins University &middot; <sup>*</sup> Equal contribution</div>
             
             <div class="hero-stats">
                 <div class="stat">
@@ -1158,11 +1216,15 @@
             <div class="hero-actions">
                 <a href="https://arxiv.org/abs/2511.19526" class="btn btn-primary" target="_blank" rel="noopener">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                    Read Paper
+                    Paper
                 </a>
                 <a href="https://github.com/XingruiWang/PercepTaxBench" class="btn btn-secondary" target="_blank" rel="noopener">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                    Code &amp; Data
+                    Code
+                </a>
+                <a href="https://huggingface.co/datasets/RyanWW/PercepTaxBench" class="btn btn-secondary" target="_blank" rel="noopener">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>
+                    Dataset
                 </a>
             </div>
         </div>
@@ -1484,15 +1546,15 @@
                     <span>BibTeX</span>
                     <button class="copy-btn" onclick="copyBibtex()">Copy</button>
                 </div>
-                <pre class="bibtex-code">@article{lee2025perceptax,
+                <pre class="bibtex-code">@inproceedings{lee2026perceptax,
   title={PercepTax: Benchmarking Physical Intelligence through
          Cross-Property Reasoning in Vision-Language Models},
   author={Lee, Jonathan and Wang, Xingrui and Peng, Jiawei and
           Ye, Luoxin and Zheng, Zehan and Zhang, Tiezheng and
           Wang, Tao and Ma, Wufei and Chen, Siyi and
           Chou, Yu-Cheng and Kaushik, Prakhar and Yuille, Alan},
-  journal={arXiv preprint arXiv:2511.19526},
-  year={2025}
+  booktitle={European Conference on Computer Vision (ECCV)},
+  year={2026}
 }</pre>
             </div>
         </div>
@@ -1505,7 +1567,7 @@
                 <a href="https://github.com/XingruiWang/PercepTaxBench" target="_blank" rel="noopener">Code</a>
                 <a href="https://huggingface.co/datasets/RyanWW/PercepTaxBench" target="_blank" rel="noopener">Dataset</a>
             </div>
-            <p class="footer-text">Johns Hopkins University · arXiv:2511.19526</p>
+            <p class="footer-text">Johns Hopkins University · ECCV 2026</p>
         </div>
     </footer>
 
