@@ -1196,6 +1196,30 @@
         .t-end-links { display: flex; gap: .6rem; flex-wrap: wrap; }
         .t-end-links a { color: #C7D6EA; text-decoration: none; font-family: var(--font-mono); font-size: .8em; border: 1px solid rgba(255,255,255,.18); padding: .35em .8em; border-radius: 8px; }
         .t-end-links a:hover { background: rgba(255,255,255,.08); color: #fff; }
+        /* property-space scene */
+        .t-fam { display: flex; align-items: center; gap: .6rem; margin-bottom: .15rem; }
+        .t-attrs { color: #9FB1C8; font-size: .82em; }
+        /* grouped bars (human vs gpt-5) */
+        .t-cat { display: grid; grid-template-columns: 96px 1fr; align-items: center; gap: .6rem; margin-bottom: .5rem; font-size: .82em; }
+        .t-cat-lab { font-weight: 600; }
+        .t-cat-bars { display: flex; flex-direction: column; gap: 4px; }
+        .t-gbar { display: grid; grid-template-columns: 46px 1fr 24px; align-items: center; gap: .5rem; }
+        .t-gbar .lab { font-family: var(--font-mono); font-size: .82em; color: #9FB1C8; }
+        .t-gbar .gv { font-family: var(--font-mono); font-size: .82em; text-align: right; }
+        .t-gbar .track { height: 9px; background: rgba(255,255,255,.08); border-radius: 999px; overflow: hidden; }
+        .t-gbar .fill { height: 100%; width: 0; border-radius: 999px; transition: width 1s cubic-bezier(.2,.8,.2,1) .3s; }
+        .t-scene.active .t-gbar .fill { width: var(--w); }
+        .fill.human { background: var(--color-taxonomy-affordance); }
+        .fill.gpt { background: #64748B; }
+        .fill.gpt.cross { background: linear-gradient(90deg, var(--color-cross), #A78BFA); }
+        /* thinking before/after */
+        .t-think { flex: 1; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.12); border-radius: 12px; padding: .85rem 1rem; }
+        .t-think.bad { border-color: rgba(239,68,68,.45); }
+        .t-think.good { border-color: var(--color-cross); background: rgba(124,58,237,.13); }
+        .t-think-tag { display: block; font-family: var(--font-mono); font-size: .72em; text-transform: uppercase; letter-spacing: .1em; color: #9FB1C8; margin-bottom: .4rem; }
+        .t-think .xx { color: #FCA5A5; } .t-think .ok { color: #86EFAC; }
+        .t-think p { font-size: .88em; line-height: 1.5; }
+
         /* caption + controls */
         .t-caption { position: absolute; left: 0; right: 0; bottom: 0; padding: 1.4rem clamp(1rem,3.2vw,2.6rem) 1rem;
             background: linear-gradient(to top, rgba(8,14,26,.92), rgba(8,14,26,0)); font-size: .9em; color: #CBD8EA; min-height: 3.2em; }
@@ -1350,49 +1374,81 @@
                     <p class="reveal" style="transition-delay:1.4s; margin-top:.6rem"><span class="t-num" data-count="3173">0</span> object classes &nbsp;·&nbsp; <span class="t-num" data-count="54">0</span> attributes</p>
                 </div>
 
-                <!-- 3. EXAMPLE -->
+                <!-- 3. ANSWER to the hook -->
                 <div class="t-scene" data-scene="2">
                     <div class="t-cols">
-                        <img class="t-img reveal" src="static/examples/setsub.jpg" alt="market scene" style="transition-delay:.1s">
+                        <img class="t-img reveal" src="static/examples/shield.jpg" alt="kitchen scene" style="transition-delay:.1s">
                         <div>
-                            <p class="t-kicker reveal">Cross-property reasoning</p>
-                            <p class="t-headline reveal" style="transition-delay:.15s" >Jointly satisfy multiple properties</p>
+                            <p class="t-kicker reveal">Back to the shield question</p>
+                            <p class="t-headline reveal" style="transition-delay:.15s">Cross-property reasoning finds the answer</p>
                             <div class="t-row t-flow" style="margin:.8rem 0">
-                                <span class="t-chip physical reveal" style="transition-delay:.5s"><span class="dot"></span>solid</span><span class="t-plus reveal" style="transition-delay:.6s">+</span>
-                                <span class="t-chip physical reveal" style="transition-delay:.7s"><span class="dot"></span>movable</span><span class="t-plus reveal" style="transition-delay:.8s">+</span>
-                                <span class="t-chip function reveal" style="transition-delay:.9s"><span class="dot"></span>not a container</span>
+                                <span class="t-chip material reveal" style="transition-delay:.5s"><span class="dot"></span>metal</span><span class="t-plus reveal" style="transition-delay:.6s">+</span>
+                                <span class="t-chip physical reveal" style="transition-delay:.7s"><span class="dot"></span>flat &amp; rigid</span><span class="t-plus reveal" style="transition-delay:.8s">+</span>
+                                <span class="t-chip affordance reveal" style="transition-delay:.9s"><span class="dot"></span>grippable</span>
                             </div>
-                            <div class="t-row"><span class="t-arrow reveal" style="transition-delay:1.2s">→</span><span class="t-chip win reveal" style="transition-delay:1.35s">Answer: market stall</span></div>
+                            <div class="t-row"><span class="t-arrow reveal" style="transition-delay:1.2s">→</span><span class="t-chip win reveal" style="transition-delay:1.35s">Answer: baking sheet</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- 4. EXPERIMENT -->
+                <!-- 4. PROPERTY SPACE -->
                 <div class="t-scene" data-scene="3">
-                    <p class="t-kicker reveal">What we find</p>
-                    <p class="t-headline reveal" style="transition-delay:.1s">VLMs recognize — but can't integrate</p>
-                    <div class="t-bars" style="margin-top:.4rem">
-                        <div class="t-bar reveal" style="transition-delay:.3s"><span>Object desc.</span><div class="t-bar-track"><div class="t-bar-fill" style="--w:87%"></div></div><span class="val">87%</span></div>
-                        <div class="t-bar reveal" style="transition-delay:.45s"><span>Spatial</span><div class="t-bar-track"><div class="t-bar-fill" style="--w:76%"></div></div><span class="val">76%</span></div>
-                        <div class="t-bar reveal" style="transition-delay:.6s"><span>Single-prop.</span><div class="t-bar-track"><div class="t-bar-fill" style="--w:55%"></div></div><span class="val">55%</span></div>
-                        <div class="t-bar reveal" style="transition-delay:.75s"><span><b>Cross-prop.</b></span><div class="t-bar-track"><div class="t-bar-fill cross" style="--w:40%"></div></div><span class="val">40%</span></div>
-                        <div class="t-bar reveal" style="transition-delay:.9s"><span>Human</span><div class="t-bar-track"><div class="t-bar-fill high" style="--w:93%"></div></div><span class="val">93%</span></div>
+                    <p class="t-kicker reveal">The property space</p>
+                    <p class="t-headline reveal" style="transition-delay:.1s">From four families to cross-property tasks</p>
+                    <div class="t-fam reveal" style="transition-delay:.3s"><span class="t-chip material"><span class="dot"></span>Material</span><span class="t-attrs">metal · wood · paper · glass · fabric · stone …</span></div>
+                    <div class="t-fam reveal" style="transition-delay:.45s"><span class="t-chip physical"><span class="dot"></span>Physical</span><span class="t-attrs">rigid · flat · movable · fragile · hollow · heavy …</span></div>
+                    <div class="t-fam reveal" style="transition-delay:.6s"><span class="t-chip affordance"><span class="dot"></span>Affordance</span><span class="t-attrs">grip · sit-on · contain · support · wear · enclose …</span></div>
+                    <div class="t-fam reveal" style="transition-delay:.75s"><span class="t-chip function"><span class="dot"></span>Function</span><span class="t-attrs">furniture · container · signage · appliance · tool …</span></div>
+                    <div class="reveal" style="transition-delay:1.05s; margin-top:.4rem">
+                        <span class="t-kicker">Cross-property tasks combine them</span>
+                        <div class="t-row" style="margin-top:.35rem">
+                            <span class="t-chip win">Structural suitability</span>
+                            <span class="t-chip win">Environmental sensitivity</span>
+                            <span class="t-chip win">Alternative use</span>
+                        </div>
+                        <span class="t-attrs" style="display:block; margin-top:.35rem">shield · stepstool · container · reflector · cushion · bookend · water-/heat-sensitive · sound-absorbing …</span>
                     </div>
-                    <p class="t-gap reveal" style="transition-delay:1.2s">GPT-5: 87% → 40% — a 44-point cross-property gap</p>
                 </div>
 
-                <!-- 5. THINK IN TAXONOMY -->
+                <!-- 5. EXPERIMENT: Human vs GPT-5 per category -->
                 <div class="t-scene" data-scene="4">
-                    <p class="t-kicker reveal">Think in taxonomy</p>
-                    <p class="t-headline reveal" style="transition-delay:.1s">Taxonomy-guided prompting helps</p>
-                    <div class="t-bars" style="margin:.5rem 0">
-                        <div class="t-bar reveal" style="transition-delay:.35s"><span>Baseline</span><div class="t-bar-track"><div class="t-bar-fill" style="--w:40%"></div></div><span class="val">39.8%</span></div>
-                        <div class="t-bar reveal" style="transition-delay:.6s"><span>+ Taxonomy ICL</span><div class="t-bar-track"><div class="t-bar-fill cross" style="--w:44%"></div></div><span class="val">43.6%</span></div>
+                    <p class="t-kicker reveal">What we find</p>
+                    <p class="t-headline reveal" style="transition-delay:.1s">Human vs. GPT-5, per category</p>
+                    <div style="margin-top:.5rem">
+                        <div class="t-cat reveal" style="transition-delay:.3s"><span class="t-cat-lab">Object desc.</span><div class="t-cat-bars">
+                            <div class="t-gbar"><span class="lab">Human</span><div class="track"><div class="fill human" style="--w:91%"></div></div><span class="gv">91</span></div>
+                            <div class="t-gbar"><span class="lab">GPT-5</span><div class="track"><div class="fill gpt" style="--w:87%"></div></div><span class="gv">87</span></div></div></div>
+                        <div class="t-cat reveal" style="transition-delay:.45s"><span class="t-cat-lab">Spatial</span><div class="t-cat-bars">
+                            <div class="t-gbar"><span class="lab">Human</span><div class="track"><div class="fill human" style="--w:90%"></div></div><span class="gv">90</span></div>
+                            <div class="t-gbar"><span class="lab">GPT-5</span><div class="track"><div class="fill gpt" style="--w:76%"></div></div><span class="gv">76</span></div></div></div>
+                        <div class="t-cat reveal" style="transition-delay:.6s"><span class="t-cat-lab">Single-prop.</span><div class="t-cat-bars">
+                            <div class="t-gbar"><span class="lab">Human</span><div class="track"><div class="fill human" style="--w:88%"></div></div><span class="gv">88</span></div>
+                            <div class="t-gbar"><span class="lab">GPT-5</span><div class="track"><div class="fill gpt" style="--w:48%"></div></div><span class="gv">48</span></div></div></div>
+                        <div class="t-cat reveal" style="transition-delay:.75s"><span class="t-cat-lab"><b>Cross-prop.</b></span><div class="t-cat-bars">
+                            <div class="t-gbar"><span class="lab">Human</span><div class="track"><div class="fill human" style="--w:93%"></div></div><span class="gv">93</span></div>
+                            <div class="t-gbar"><span class="lab">GPT-5</span><div class="track"><div class="fill gpt cross" style="--w:40%"></div></div><span class="gv">40</span></div></div></div>
                     </div>
-                    <p class="reveal" style="transition-delay:.95s">A step forward (<b style="color:#A78BFA">+9.6%</b>) — but a large gap to humans remains.</p>
-                    <div class="t-row reveal" style="transition-delay:1.2s; margin-top:.6rem; align-items:baseline; gap:.8rem">
-                        <span class="t-num">PercepTax</span>
-                        <span class="t-end-links">
+                    <p class="t-gap reveal" style="transition-delay:1.3s">A 4-pt gap on recognition → a <b>53-pt</b> gap on cross-property reasoning</p>
+                </div>
+
+                <!-- 6. THINK IN TAXONOMY -->
+                <div class="t-scene" data-scene="5">
+                    <p class="t-kicker reveal">Think in taxonomy</p>
+                    <p class="t-headline reveal" style="transition-delay:.1s">Reasoning over properties flips the answer</p>
+                    <p class="reveal" style="transition-delay:.25s; color:#9FB1C8">Q: “If water spills here, which object is damaged first?”</p>
+                    <div class="t-cols" style="gap:1rem; align-items:stretch">
+                        <div class="t-think bad reveal" style="transition-delay:.55s">
+                            <span class="t-think-tag">Before <span class="xx">✗</span></span>
+                            <p>Reasons by <b>proximity</b> to the sink — ignores what each object is made of.</p>
+                        </div>
+                        <div class="t-think good reveal" style="transition-delay:.85s">
+                            <span class="t-think-tag">Think in taxonomy <span class="ok">✓</span></span>
+                            <p>Lists materials → <b>paper absorbs, glass &amp; metal don’t</b> → the paper item fails first.</p>
+                        </div>
+                    </div>
+                    <div class="t-row reveal" style="transition-delay:1.2s; margin-top:.5rem; align-items:center; gap:.8rem">
+                        <span class="t-pill">+9.6% on real cross-property</span>
+                        <span class="t-end-links" style="margin-left:auto">
                             <a href="https://arxiv.org/abs/2511.19526" target="_blank" rel="noopener">Paper</a>
                             <a href="https://github.com/XingruiWang/PercepTaxBench" target="_blank" rel="noopener">Code</a>
                             <a href="https://huggingface.co/datasets/RyanWW/PercepTaxBench" target="_blank" rel="noopener">Dataset</a>
@@ -1807,11 +1863,12 @@
             const CAPTIONS = [
                 "Humans reason over object properties — flat, rigid, portable — to pick a shield. Can VLMs do the same?",
                 "We formalize Perceptual Taxonomy: every object gets a full profile across material, physical, affordance & function — 3,173 objects, 54 attributes.",
-                "Cross-Property Reasoning, our key new task, requires jointly satisfying constraints across several properties.",
-                "VLMs ace object description but collapse on cross-property reasoning — a 44-point gap, far below humans.",
-                "Taxonomy-guided in-context learning lifts accuracy (+9.6%), yet a large gap to humans remains. Explore PercepTax →",
+                "Back to our question: cross-property reasoning over material, physical & affordance cues yields the answer — a baking sheet.",
+                "Each family expands into concrete attributes; cross-property tasks combine them — structural suitability, environmental sensitivity, and alternative use.",
+                "Per category, the gap to humans is small for recognition but enormous for cross-property reasoning (93 vs 40).",
+                "Prompted to think in taxonomy, the model reasons over properties step by step — turning a wrong guess into the right answer (+9.6%).",
             ];
-            const DUR = [9000, 10000, 10000, 10000, 9000];
+            const DUR = [8000, 9000, 9000, 10000, 10000, 10000];
             const TOTAL = DUR.reduce(function(a,b){return a+b;}, 0);
             const STARTS = DUR.map(function(_, i){ return DUR.slice(0, i).reduce(function(a,b){return a+b;}, 0); });
 
