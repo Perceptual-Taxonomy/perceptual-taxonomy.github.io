@@ -1118,8 +1118,8 @@
             <div class="hero-badge">
                 <span>arXiv:2511.19526</span>
             </div>
-            <h1>Perceptual Taxonomy:<br><em>Evaluating Hierarchical</em><br>Scene Reasoning in VLMs</h1>
-            <p class="hero-subtitle">A structured process of scene understanding that first recognizes objects and their spatial configurations, then infers task-relevant properties to support goal-directed reasoning.</p>
+            <h1>PercepTax:<br><em>Benchmarking Physical Intelligence through</em><br>Cross-Property Reasoning in VLMs</h1>
+            <p class="hero-subtitle">A benchmark for <strong>perceptual taxonomy</strong> reasoning — testing whether vision-language models can jointly integrate <strong>material</strong>, <strong>physical</strong>, <strong>affordance</strong>, and <strong>functional</strong> properties to reason about physical scenes, beyond single-property recognition.</p>
             
             <div class="hero-authors">
                 <span class="author">Jonathan Lee</span>
@@ -1146,7 +1146,7 @@
                     <span class="stat-label">Images</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-value">84</span>
+                    <span class="stat-value">54</span>
                     <span class="stat-label">Attributes</span>
                 </div>
                 <div class="stat">
@@ -1160,9 +1160,9 @@
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                     Read Paper
                 </a>
-                <a href="#" class="btn btn-secondary">
+                <a href="https://github.com/XingruiWang/PercepTaxBench" class="btn btn-secondary" target="_blank" rel="noopener">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-                    Code & Data
+                    Code &amp; Data
                 </a>
             </div>
         </div>
@@ -1185,11 +1185,11 @@
                 <p class="section-label">Abstract</p>
             </div>
             <p class="abstract-text">
-                We propose <strong>Perceptual Taxonomy</strong>, a structured process of scene understanding that first recognizes objects and their spatial configurations, then infers task-relevant properties, such as <strong>material</strong>, <strong>affordance</strong>, and <strong>function</strong> to support goal-directed reasoning. While this form of reasoning is fundamental to human cognition, current vision-language benchmarks lack comprehensive evaluation of this ability.
+                Reasoning about objects in the physical world requires understanding both the spatial structure of a scene and the properties of objects within it. We formalize this process as <strong>Perceptual Taxonomy</strong>, a hierarchical framework that organizes visual understanding into structured <strong>scene → object → property</strong> representations. Existing benchmarks cover only parts of this framework, missing a challenging yet practical capability: <strong>cross-property reasoning</strong>, where a model must simultaneously integrate reasoning across all property families to answer questions about physical environments.
                 <br><br>
-                To address this gap, we introduce <strong>PercepTax</strong>, a benchmark for physically grounded visual reasoning. We annotate <strong>3,173 objects</strong> with four property families covering <strong>84 fine-grained attributes</strong>. Based on these annotations, we construct a multiple-choice question benchmark with <strong>5,802 images</strong> spanning both synthetic and real domains, including <strong>28,033 template-based questions</strong> and <strong>50 expert-crafted questions</strong>.
+                We introduce <strong>PercepTax</strong>, a benchmark for perceptual taxonomy reasoning. We annotate <strong>3,173 object classes</strong> with <strong>54 fine-grained attributes</strong> across four property families: <strong>material, physical attributes, affordance, and function</strong>. It contains <strong>5,802 images</strong> from synthetic and real domains and <strong>28,033 questions</strong> spanning object description, single-property recognition, 3D spatial reasoning, and cross-property reasoning.
                 <br><br>
-                Experimental results reveal that leading VLMs perform well on recognition tasks but <strong>degrade significantly by 10-20%</strong> on property-driven questions, especially those requiring multi-step reasoning over structured attributes.
+                State-of-the-art VLMs perform strongly on object description and single-property tasks, but accuracy <strong>drops sharply on cross-property reasoning</strong> (e.g. GPT-5: 87% → 40% on real images). Oracle experiments with ground-truth properties and taxonomy-guided in-context learning both improve performance yet remain well below human levels — confirming that both <strong>visual perception of individual properties</strong> and their <strong>cross-property integration</strong> are bottlenecks for VLMs.
             </p>
         </div>
     </section>
@@ -1197,33 +1197,35 @@
     <section id="taxonomy">
         <div class="section-header">
             <p class="section-label">Property Taxonomy</p>
-            <h2 class="section-title">Four Pillars of Perceptual Understanding</h2>
+            <h2 class="section-title">Four Property Families · 54 Attributes</h2>
         </div>
-        
+
+        <p class="section-lead">Every object receives a <strong>complete profile across all four families simultaneously</strong> — the prerequisite for cross-property reasoning. We annotate 3,173 object classes with many-to-many mappings to 54 fine-grained attributes.</p>
+
         <div class="taxonomy-grid animate-on-scroll">
             <div class="taxonomy-card">
                 <div class="taxonomy-icon">🧱</div>
                 <h3>Material</h3>
-                <p>The object's visual and physical substance (e.g., paper, metal, wood), determining rigidity, weight, texture, and durability.</p>
-                <p class="taxonomy-count">17 types annotated</p>
+                <p>The object's visual and physical substance (e.g., paper, metal, wood), which determines its rigidity, weight, texture, and durability.</p>
+                <p class="taxonomy-count">14 material types</p>
             </div>
             <div class="taxonomy-card">
                 <div class="taxonomy-icon">⚖️</div>
                 <h3>Physical Properties</h3>
-                <p>Intrinsic physical characteristics governing behavior under external forces: rigidity, fragility, elasticity, mass, stability.</p>
-                <p class="taxonomy-count">18 properties defined</p>
+                <p>Intrinsic characteristics governing how the object behaves under external forces: rigidity, fragility, elasticity, mass, or stability.</p>
+                <p class="taxonomy-count">17 physical properties</p>
             </div>
             <div class="taxonomy-card">
                 <div class="taxonomy-icon">🤲</div>
                 <h3>Affordance</h3>
-                <p>Actions or interactions the object enables based on shape and components: graspable, supportable, containable.</p>
-                <p class="taxonomy-count">26 affordances mapped</p>
+                <p>The actions the object enables based on its shape and components (graspable, supportable, sit-on, containable), independent of intended purpose.</p>
+                <p class="taxonomy-count">10 affordances</p>
             </div>
             <div class="taxonomy-card">
                 <div class="taxonomy-icon">🎯</div>
                 <h3>Function</h3>
-                <p>The object's intended or contextual role: seating furniture, storage container, display signage, and more.</p>
-                <p class="taxonomy-count">23 functions categorized</p>
+                <p>The object's intended role when invented (e.g., seating furniture, storage container, display signage), reflecting how humans typically use it.</p>
+                <p class="taxonomy-count">13 functions</p>
             </div>
         </div>
     </section>
@@ -1231,7 +1233,7 @@
     <section id="benchmark">
         <div class="section-header">
             <p class="section-label">Benchmark Design</p>
-            <h2 class="section-title">Four Question Types for Complete Evaluation</h2>
+            <h2 class="section-title">Four Task Types at Graduated Levels of Reasoning</h2>
         </div>
 
         <div class="benchmark-overview animate-on-scroll">
@@ -1239,34 +1241,34 @@
                 <div class="question-types">
                     <div class="question-type">
                         <span class="qt-number">01</span>
-                        <span class="qt-name">Object Description</span>
-                        <div class="qt-bar"><div class="qt-fill obj"></div></div>
+                        <span class="qt-name">Object Description · 1.8%</span>
+                        <div class="qt-bar"><div class="qt-fill obj" style="width:4%"></div></div>
                     </div>
                     <div class="question-type">
                         <span class="qt-number">02</span>
-                        <span class="qt-name">Spatial Reasoning</span>
-                        <div class="qt-bar"><div class="qt-fill spatial"></div></div>
+                        <span class="qt-name">3D Spatial Reasoning · 19.4%</span>
+                        <div class="qt-bar"><div class="qt-fill spatial" style="width:34%"></div></div>
                     </div>
                     <div class="question-type">
                         <span class="qt-number">03</span>
-                        <span class="qt-name">Attribute Matching</span>
-                        <div class="qt-bar"><div class="qt-fill attr"></div></div>
+                        <span class="qt-name">Single-Property Understanding · 22.1%</span>
+                        <div class="qt-bar"><div class="qt-fill attr" style="width:39%"></div></div>
                     </div>
                     <div class="question-type">
                         <span class="qt-number">04</span>
-                        <span class="qt-name">Taxonomy Reasoning</span>
-                        <div class="qt-bar"><div class="qt-fill tax"></div></div>
+                        <span class="qt-name">Cross-Property Reasoning · 56.7%</span>
+                        <div class="qt-bar"><div class="qt-fill tax" style="width:100%"></div></div>
                     </div>
                 </div>
             </div>
             <div class="benchmark-details">
-                <h3>From Recognition to Reasoning</h3>
-                <p>Our benchmark systematically evaluates the full spectrum of perceptual taxonomy, from basic object identification to complex multi-step reasoning over physical properties.</p>
+                <h3>From Recognition to Cross-Property Reasoning</h3>
+                <p>PercepTax evaluates all levels of perceptual taxonomy on the same scenes and objects, from object localization to multi-attribute inference. <strong>Cross-property reasoning</strong> — our key new task — makes up the majority (56.7%) of the 28,033 questions.</p>
                 <ul class="benchmark-list">
-                    <li><strong>Object Description:</strong> Match descriptions to color-coded bounding boxes based on material, properties, affordances, or function</li>
-                    <li><strong>Spatial Reasoning:</strong> Identify left/right, above/below, front/behind relations between objects</li>
-                    <li><strong>Attribute Matching:</strong> Associate specific physical or functional attributes with correct objects</li>
-                    <li><strong>Taxonomy Reasoning:</strong> Multi-step inference combining affordances, materials, and functional compatibility</li>
+                    <li><strong>Object Description:</strong> match a natural-language property description to the correct color-coded box</li>
+                    <li><strong>3D Spatial Reasoning:</strong> left/right, above/below, front/behind, closer/farther relations computed from ground-truth 3D positions</li>
+                    <li><strong>Single-Property Understanding:</strong> associate one material, physical, affordance, or function attribute with the correct object</li>
+                    <li><strong>Cross-Property Reasoning:</strong> goal-oriented questions (e.g. “which object could serve as a stepstool?”) that require jointly satisfying constraints across multiple properties</li>
                 </ul>
             </div>
         </div>
@@ -1275,7 +1277,7 @@
     <section id="example">
         <div class="section-header">
             <p class="section-label">Example</p>
-            <h2 class="section-title">Taxonomy Reasoning in Action</h2>
+            <h2 class="section-title">Cross-Property Reasoning in Action</h2>
         </div>
 
         <p class="section-lead">Every question deliberately <strong>crosses several physical properties</strong>. Solving it requires reasoning <em>through</em> those properties — not just recognizing the object. Each example below shows the full chain: <strong>Question&nbsp;(which properties cross)&nbsp;→&nbsp;Reasoning&nbsp;with&nbsp;properties&nbsp;→&nbsp;Answer</strong>. The candidate objects are marked by colored boxes in the image.</p>
@@ -1379,6 +1381,7 @@
                 <h2 class="section-title">Revealing the Reasoning Gap</h2>
             </div>
 
+            <p class="section-lead">Open-ended accuracy on the <strong>Real-Image set</strong> (responses judged by a Gemini verifier). Models excel at object description but collapse on cross-property reasoning — far below the human upper bound.</p>
             <div class="results-table">
                 <table>
                     <thead>
@@ -1386,59 +1389,67 @@
                             <th>Model</th>
                             <th>Spatial</th>
                             <th>Obj. Desc.</th>
-                            <th>Attr. Match</th>
-                            <th>Tax. Reason.</th>
+                            <th>Single-Prop.</th>
+                            <th>Cross-Prop.</th>
                             <th>Overall</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
+                            <td class="model-name">Human <span class="model-tag">Upper bound</span></td>
+                            <td class="score-high">89.70%</td>
+                            <td class="score-high">91.11%</td>
+                            <td class="score-high">88.15%</td>
+                            <td class="score-high">92.96%</td>
+                            <td class="score-high">90.48%</td>
+                        </tr>
+                        <tr>
                             <td class="model-name">Gemini 2.5 Pro <span class="model-tag">Closed</span></td>
-                            <td>73.32%</td>
-                            <td class="score-high">92.16%</td>
-                            <td>81.01%</td>
-                            <td>63.40%</td>
-                            <td class="score-high">77.97%</td>
+                            <td>74.30%</td>
+                            <td>84.70%</td>
+                            <td class="score-high">55.29%</td>
+                            <td class="score-high">53.00%</td>
+                            <td class="score-high">57.38%</td>
                         </tr>
                         <tr>
                             <td class="model-name">GPT-5 <span class="model-tag">Closed</span></td>
-                            <td>74.58%</td>
-                            <td>88.63%</td>
-                            <td>78.42%</td>
-                            <td>59.18%</td>
-                            <td>70.70%</td>
+                            <td class="score-high">76.23%</td>
+                            <td class="score-high">87.06%</td>
+                            <td>47.77%</td>
+                            <td>39.84%</td>
+                            <td>48.78%</td>
                         </tr>
                         <tr>
                             <td class="model-name">Claude Sonnet 4.5 <span class="model-tag">Closed</span></td>
-                            <td>48.80%</td>
-                            <td>65.21%</td>
-                            <td>52.32%</td>
-                            <td>40.26%</td>
-                            <td>51.65%</td>
+                            <td>69.38%</td>
+                            <td>66.67%</td>
+                            <td>43.59%</td>
+                            <td>32.95%</td>
+                            <td>42.48%</td>
                         </tr>
                         <tr>
                             <td class="model-name">Qwen3-VL-32B <span class="model-tag open">Open</span></td>
-                            <td class="score-high">74.30%</td>
-                            <td>84.31%</td>
-                            <td>74.19%</td>
-                            <td>48.78%</td>
-                            <td>64.07%</td>
+                            <td>72.16%</td>
+                            <td>81.18%</td>
+                            <td>50.37%</td>
+                            <td>41.66%</td>
+                            <td>50.08%</td>
                         </tr>
                         <tr>
                             <td class="model-name">InternVL3.5-30B <span class="model-tag open">Open</span></td>
+                            <td class="score-high">76.23%</td>
                             <td>72.16%</td>
-                            <td>83.13%</td>
-                            <td>67.12%</td>
-                            <td>37.97%</td>
-                            <td>56.15%</td>
+                            <td>37.06%</td>
+                            <td>25.57%</td>
+                            <td>37.32%</td>
                         </tr>
                         <tr>
                             <td class="model-name">Qwen3-VL-8B <span class="model-tag open">Open</span></td>
-                            <td>73.02%</td>
-                            <td>85.10%</td>
-                            <td>69.44%</td>
-                            <td>45.26%</td>
-                            <td>60.04%</td>
+                            <td>73.23%</td>
+                            <td>77.65%</td>
+                            <td>45.04%</td>
+                            <td>39.08%</td>
+                            <td>46.54%</td>
                         </tr>
                     </tbody>
                 </table>
@@ -1446,16 +1457,16 @@
 
             <div class="insight-cards">
                 <div class="insight-card">
-                    <h4>Recognition vs. Reasoning Gap</h4>
-                    <p>Even GPT-5 drops from 88.63% on object description to 59.18% on taxonomy reasoning—a 29+ point decline revealing weak property-level understanding.</p>
+                    <h4>A 44+ point recognition–reasoning gap</h4>
+                    <p>GPT-5 drops from 87.06% on object description to 39.84% on cross-property reasoning. Even the best model (Gemini, 53.00%) stays far below the 92.96% human level.</p>
                 </div>
                 <div class="insight-card">
-                    <h4>Sim-to-Real Transfer</h4>
-                    <p>PercepTax ICL improves Gemini from 14 to 34 correct expert questions, demonstrating that hierarchical reasoning learned from simulation transfers to real-world scenarios.</p>
+                    <h4>Integration is the bottleneck</h4>
+                    <p>Oracle ground-truth properties lift accuracy (+20% single-property), yet cross-property reasoning stays well below human — the deeper limit is compositional integration, not just perception.</p>
                 </div>
                 <div class="insight-card">
-                    <h4>Open-Source Progress</h4>
-                    <p>Qwen3-VL-32B achieves 74.30% on spatial reasoning, surpassing closed-source models and showing strong open-source competitiveness.</p>
+                    <h4>Taxonomy-guided ICL helps</h4>
+                    <p>One simulation exemplar with structured property cues improves real-image cross-property reasoning by up to +9.56% (Gemini 53.00→54.86, GPT-5 39.84→43.60), confirming sim-to-real transfer.</p>
                 </div>
             </div>
         </div>
@@ -1473,15 +1484,15 @@
                     <span>BibTeX</span>
                     <button class="copy-btn" onclick="copyBibtex()">Copy</button>
                 </div>
-                <pre class="bibtex-code">@article{lee2024perceptax,
-  title={Perceptual Taxonomy: Evaluating and Guiding 
-         Hierarchical Scene Reasoning in Vision-Language Models},
-  author={Lee, Jonathan and Wang, Xingrui and Peng, Jiawei and 
-          Ye, Luoxin and Zheng, Zehan and Zhang, Tiezheng and 
-          Wang, Tao and Ma, Wufei and Chen, Siyi and 
+                <pre class="bibtex-code">@article{lee2025perceptax,
+  title={PercepTax: Benchmarking Physical Intelligence through
+         Cross-Property Reasoning in Vision-Language Models},
+  author={Lee, Jonathan and Wang, Xingrui and Peng, Jiawei and
+          Ye, Luoxin and Zheng, Zehan and Zhang, Tiezheng and
+          Wang, Tao and Ma, Wufei and Chen, Siyi and
           Chou, Yu-Cheng and Kaushik, Prakhar and Yuille, Alan},
   journal={arXiv preprint arXiv:2511.19526},
-  year={2024}
+  year={2025}
 }</pre>
             </div>
         </div>
@@ -1491,9 +1502,8 @@
         <div class="footer-content">
             <div class="footer-links">
                 <a href="https://arxiv.org/abs/2511.19526" target="_blank" rel="noopener">Paper</a>
-                <a href="#">Code</a>
-                <a href="#">Dataset</a>
-                <a href="#">Leaderboard</a>
+                <a href="https://github.com/XingruiWang/PercepTaxBench" target="_blank" rel="noopener">Code</a>
+                <a href="https://huggingface.co/datasets/RyanWW/PercepTaxBench" target="_blank" rel="noopener">Dataset</a>
             </div>
             <p class="footer-text">Johns Hopkins University · arXiv:2511.19526</p>
         </div>
