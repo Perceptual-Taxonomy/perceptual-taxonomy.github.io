@@ -1144,6 +1144,77 @@
             opacity: 1;
             transform: translateY(0);
         }
+        /* ===== Teaser ===== */
+        .teaser-band { padding: 1rem 3rem 4rem; display: flex; justify-content: center; }
+        .teaser-wrap { width: 100%; max-width: 940px; }
+        .teaser-stage {
+            position: relative; width: 100%; aspect-ratio: 16 / 9;
+            background: radial-gradient(120% 120% at 80% 0%, #1E2A44 0%, #0F1B2D 60%);
+            border: 1px solid var(--color-border); border-radius: 18px; overflow: hidden;
+            box-shadow: 0 24px 60px rgba(15,27,45,.18);
+            color: #E8EEF6; font-size: clamp(12px, 1.5vw, 16px);
+        }
+        .t-scene {
+            position: absolute; inset: 0; padding: clamp(1rem, 3.2vw, 2.6rem);
+            padding-bottom: 4.4rem;
+            display: flex; flex-direction: column; justify-content: center; gap: 1rem;
+            opacity: 0; transform: scale(1.015); transition: opacity .6s ease, transform .6s ease;
+            pointer-events: none;
+        }
+        .t-scene.active { opacity: 1; transform: none; }
+        .t-kicker { font-family: var(--font-mono); font-size: .72em; letter-spacing: .18em; text-transform: uppercase; color: #8AA0BE; }
+        .t-headline { font-size: clamp(1.1rem, 2.6vw, 1.9rem); font-weight: 800; line-height: 1.2; letter-spacing: -.02em; }
+        .t-row { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; }
+        .t-cols { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem,3vw,2rem); align-items: center; }
+        .t-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 12px; border: 1px solid rgba(255,255,255,.12); }
+        .t-chip { display: inline-flex; align-items: center; gap: .45em; font-size: .82em; font-weight: 600;
+            padding: .32em .7em; border-radius: 999px; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.16); white-space: nowrap; }
+        .t-chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+        .t-chip.material .dot { background: var(--color-taxonomy-material); }
+        .t-chip.physical .dot { background: var(--color-taxonomy-physical); }
+        .t-chip.affordance .dot { background: var(--color-taxonomy-affordance); }
+        .t-chip.function .dot { background: var(--color-taxonomy-function); }
+        .t-chip.win { background: rgba(124,58,237,.22); border-color: var(--color-cross); color: #fff; font-weight: 700; }
+        .t-plus { color: #7E93B2; font-weight: 700; }
+        .t-arrow { color: var(--color-cross); font-weight: 800; font-size: 1.3em; }
+        .t-pill { display: inline-flex; align-items: center; gap: .4em; font-family: var(--font-mono); font-size: .8em; padding: .35em .8em; border-radius: 8px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); }
+        .t-flow .t-arrow { margin: 0 .15em; }
+        /* staggered reveal */
+        .t-scene .reveal { opacity: 0; transform: translateY(12px); transition: opacity .55s ease, transform .55s ease; }
+        .t-scene.active .reveal { opacity: 1; transform: none; }
+        /* bars */
+        .t-bars { display: flex; flex-direction: column; gap: .55rem; }
+        .t-bar { display: grid; grid-template-columns: 130px 1fr 48px; align-items: center; gap: .6rem; font-size: .82em; }
+        .t-bar-track { height: 12px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; }
+        .t-bar-fill { height: 100%; width: 0; border-radius: 999px; transition: width 1.1s cubic-bezier(.2,.8,.2,1) .25s; background: #64748B; }
+        .t-bar-fill.cross { background: linear-gradient(90deg, var(--color-cross), #A78BFA); }
+        .t-bar-fill.high { background: var(--color-taxonomy-affordance); }
+        .t-scene.active .t-bar-fill { width: var(--w); }
+        .t-bar .val { font-family: var(--font-mono); text-align: right; }
+        .t-gap { color: #FCA5A5; font-family: var(--font-mono); font-size: .8em; }
+        .t-num { font-weight: 800; font-size: clamp(1.4rem,3.5vw,2.4rem); letter-spacing: -.02em; }
+        .t-end-links { display: flex; gap: .6rem; flex-wrap: wrap; }
+        .t-end-links a { color: #C7D6EA; text-decoration: none; font-family: var(--font-mono); font-size: .8em; border: 1px solid rgba(255,255,255,.18); padding: .35em .8em; border-radius: 8px; }
+        .t-end-links a:hover { background: rgba(255,255,255,.08); color: #fff; }
+        /* caption + controls */
+        .t-caption { position: absolute; left: 0; right: 0; bottom: 0; padding: 1.4rem clamp(1rem,3.2vw,2.6rem) 1rem;
+            background: linear-gradient(to top, rgba(8,14,26,.92), rgba(8,14,26,0)); font-size: .9em; color: #CBD8EA; min-height: 3.2em; }
+        .teaser-controls { display: flex; align-items: center; gap: 1rem; margin-top: 1rem; }
+        .t-play { display: inline-flex; align-items: center; gap: .5rem; cursor: pointer; border: none;
+            background: var(--color-text); color: var(--color-bg); font-family: var(--font-sans); font-weight: 600; font-size: .85rem; padding: .6rem 1.1rem; border-radius: 999px; }
+        .t-progress { flex: 1; height: 4px; background: var(--color-border); border-radius: 999px; overflow: hidden; }
+        .t-progress-fill { height: 100%; width: 0; background: var(--color-cross); }
+        .t-dots { display: flex; gap: .4rem; }
+        .t-dot { width: 9px; height: 9px; border-radius: 50%; border: none; background: var(--color-border); cursor: pointer; padding: 0; }
+        .t-dot.active { background: var(--color-cross); transform: scale(1.25); }
+        @media (max-width: 700px) {
+            .t-cols { grid-template-columns: 1fr; gap: .8rem; }
+            .t-cols .t-img { display: none; }
+            .t-bar { grid-template-columns: 92px 1fr 40px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .t-scene, .reveal, .t-bar-fill { transition: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -1237,6 +1308,105 @@
                 <div class="taxonomy-node node-affordance">Affordance</div>
                 <div class="taxonomy-node node-function">Function</div>
                 <div class="taxonomy-node node-physical">Physical Props</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="teaser-band">
+        <div class="teaser-wrap">
+            <div class="teaser-stage" id="teaserStage">
+
+                <!-- 1. HOOK -->
+                <div class="t-scene" data-scene="0">
+                    <div class="t-cols">
+                        <img class="t-img reveal" src="static/examples/shield.jpg" alt="kitchen scene" style="transition-delay:.1s">
+                        <div>
+                            <p class="t-kicker reveal">A human-easy question</p>
+                            <p class="t-headline reveal" style="transition-delay:.15s">“Which object could you grab and use as a shield?”</p>
+                            <div class="t-row" style="margin-top:1rem">
+                                <span class="t-chip physical reveal" style="transition-delay:.5s"><span class="dot"></span>flat</span>
+                                <span class="t-chip physical reveal" style="transition-delay:.8s"><span class="dot"></span>rigid</span>
+                                <span class="t-chip affordance reveal" style="transition-delay:1.1s"><span class="dot"></span>portable</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. DESIGN -->
+                <div class="t-scene" data-scene="1">
+                    <p class="t-kicker reveal">Our framework</p>
+                    <p class="t-headline reveal" style="transition-delay:.1s">Perceptual Taxonomy: Scene → Object → Properties</p>
+                    <div class="t-row t-flow" style="margin:.4rem 0 .6rem">
+                        <span class="t-pill reveal" style="transition-delay:.2s">Scene</span><span class="t-arrow reveal" style="transition-delay:.3s">→</span>
+                        <span class="t-pill reveal" style="transition-delay:.4s">Object</span><span class="t-arrow reveal" style="transition-delay:.5s">→</span>
+                        <span class="t-pill reveal" style="transition-delay:.6s">Properties</span>
+                    </div>
+                    <div class="t-row">
+                        <span class="t-chip material reveal" style="transition-delay:.7s"><span class="dot"></span>Material · 14</span>
+                        <span class="t-chip physical reveal" style="transition-delay:.85s"><span class="dot"></span>Physical · 17</span>
+                        <span class="t-chip affordance reveal" style="transition-delay:1s"><span class="dot"></span>Affordance · 10</span>
+                        <span class="t-chip function reveal" style="transition-delay:1.15s"><span class="dot"></span>Function · 13</span>
+                    </div>
+                    <p class="reveal" style="transition-delay:1.4s; margin-top:.6rem"><span class="t-num" data-count="3173">0</span> object classes &nbsp;·&nbsp; <span class="t-num" data-count="54">0</span> attributes</p>
+                </div>
+
+                <!-- 3. EXAMPLE -->
+                <div class="t-scene" data-scene="2">
+                    <div class="t-cols">
+                        <img class="t-img reveal" src="static/examples/setsub.jpg" alt="market scene" style="transition-delay:.1s">
+                        <div>
+                            <p class="t-kicker reveal">Cross-property reasoning</p>
+                            <p class="t-headline reveal" style="transition-delay:.15s" >Jointly satisfy multiple properties</p>
+                            <div class="t-row t-flow" style="margin:.8rem 0">
+                                <span class="t-chip physical reveal" style="transition-delay:.5s"><span class="dot"></span>solid</span><span class="t-plus reveal" style="transition-delay:.6s">+</span>
+                                <span class="t-chip physical reveal" style="transition-delay:.7s"><span class="dot"></span>movable</span><span class="t-plus reveal" style="transition-delay:.8s">+</span>
+                                <span class="t-chip function reveal" style="transition-delay:.9s"><span class="dot"></span>not a container</span>
+                            </div>
+                            <div class="t-row"><span class="t-arrow reveal" style="transition-delay:1.2s">→</span><span class="t-chip win reveal" style="transition-delay:1.35s">Answer: market stall</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. EXPERIMENT -->
+                <div class="t-scene" data-scene="3">
+                    <p class="t-kicker reveal">What we find</p>
+                    <p class="t-headline reveal" style="transition-delay:.1s">VLMs recognize — but can't integrate</p>
+                    <div class="t-bars" style="margin-top:.4rem">
+                        <div class="t-bar reveal" style="transition-delay:.3s"><span>Object desc.</span><div class="t-bar-track"><div class="t-bar-fill" style="--w:87%"></div></div><span class="val">87%</span></div>
+                        <div class="t-bar reveal" style="transition-delay:.45s"><span>Spatial</span><div class="t-bar-track"><div class="t-bar-fill" style="--w:76%"></div></div><span class="val">76%</span></div>
+                        <div class="t-bar reveal" style="transition-delay:.6s"><span>Single-prop.</span><div class="t-bar-track"><div class="t-bar-fill" style="--w:55%"></div></div><span class="val">55%</span></div>
+                        <div class="t-bar reveal" style="transition-delay:.75s"><span><b>Cross-prop.</b></span><div class="t-bar-track"><div class="t-bar-fill cross" style="--w:40%"></div></div><span class="val">40%</span></div>
+                        <div class="t-bar reveal" style="transition-delay:.9s"><span>Human</span><div class="t-bar-track"><div class="t-bar-fill high" style="--w:93%"></div></div><span class="val">93%</span></div>
+                    </div>
+                    <p class="t-gap reveal" style="transition-delay:1.2s">GPT-5: 87% → 40% — a 44-point cross-property gap</p>
+                </div>
+
+                <!-- 5. THINK IN TAXONOMY -->
+                <div class="t-scene" data-scene="4">
+                    <p class="t-kicker reveal">Think in taxonomy</p>
+                    <p class="t-headline reveal" style="transition-delay:.1s">Taxonomy-guided prompting helps</p>
+                    <div class="t-bars" style="margin:.5rem 0">
+                        <div class="t-bar reveal" style="transition-delay:.35s"><span>Baseline</span><div class="t-bar-track"><div class="t-bar-fill" style="--w:40%"></div></div><span class="val">39.8%</span></div>
+                        <div class="t-bar reveal" style="transition-delay:.6s"><span>+ Taxonomy ICL</span><div class="t-bar-track"><div class="t-bar-fill cross" style="--w:44%"></div></div><span class="val">43.6%</span></div>
+                    </div>
+                    <p class="reveal" style="transition-delay:.95s">A step forward (<b style="color:#A78BFA">+9.6%</b>) — but a large gap to humans remains.</p>
+                    <div class="t-row reveal" style="transition-delay:1.2s; margin-top:.6rem; align-items:baseline; gap:.8rem">
+                        <span class="t-num">PercepTax</span>
+                        <span class="t-end-links">
+                            <a href="https://arxiv.org/abs/2511.19526" target="_blank" rel="noopener">Paper</a>
+                            <a href="https://github.com/XingruiWang/PercepTaxBench" target="_blank" rel="noopener">Code</a>
+                            <a href="https://huggingface.co/datasets/RyanWW/PercepTaxBench" target="_blank" rel="noopener">Dataset</a>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="t-caption" id="teaserCaption"></div>
+            </div>
+
+            <div class="teaser-controls">
+                <button class="t-play" id="teaserPlay" aria-label="Play teaser">▶ Play</button>
+                <div class="t-dots" id="teaserDots"></div>
+                <div class="t-progress"><div class="t-progress-fill" id="teaserProgress"></div></div>
             </div>
         </div>
     </section>
@@ -1623,6 +1793,96 @@
                 document.querySelectorAll('.example-panel').forEach(p => p.classList.toggle('active', p.id === target));
             });
         });
+
+        // ===== Teaser player =====
+        (function(){
+            const stage = document.getElementById('teaserStage');
+            if(!stage) return;
+            const scenes = Array.prototype.slice.call(stage.querySelectorAll('.t-scene'));
+            const captionEl = document.getElementById('teaserCaption');
+            const playBtn = document.getElementById('teaserPlay');
+            const dotsEl = document.getElementById('teaserDots');
+            const progressEl = document.getElementById('teaserProgress');
+
+            const CAPTIONS = [
+                "Humans reason over object properties — flat, rigid, portable — to pick a shield. Can VLMs do the same?",
+                "We formalize Perceptual Taxonomy: every object gets a full profile across material, physical, affordance & function — 3,173 objects, 54 attributes.",
+                "Cross-Property Reasoning, our key new task, requires jointly satisfying constraints across several properties.",
+                "VLMs ace object description but collapse on cross-property reasoning — a 44-point gap, far below humans.",
+                "Taxonomy-guided in-context learning lifts accuracy (+9.6%), yet a large gap to humans remains. Explore PercepTax →",
+            ];
+            const DUR = [9000, 10000, 10000, 10000, 9000];
+            const TOTAL = DUR.reduce(function(a,b){return a+b;}, 0);
+            const STARTS = DUR.map(function(_, i){ return DUR.slice(0, i).reduce(function(a,b){return a+b;}, 0); });
+
+            let elapsed = 0, last = null, playing = false, raf = null, current = -1, hasPlayed = false;
+            const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            scenes.forEach(function(_, i){
+                const d = document.createElement('button');
+                d.className = 't-dot'; d.setAttribute('aria-label', 'Scene ' + (i+1));
+                d.addEventListener('click', function(){ seek(STARTS[i]); });
+                dotsEl.appendChild(d);
+            });
+            const dots = Array.prototype.slice.call(dotsEl.children);
+
+            function countUp(scene){
+                scene.querySelectorAll('.t-num[data-count]').forEach(function(el){
+                    const target = +el.dataset.count, t0 = performance.now();
+                    (function step(now){
+                        const p = Math.min(1, (now - t0) / 900);
+                        el.textContent = Math.round(target * p).toLocaleString();
+                        if(p < 1) requestAnimationFrame(step);
+                    })(t0);
+                });
+            }
+            function setScene(i){
+                if(i === current) return;
+                current = i;
+                scenes.forEach(function(s, k){ s.classList.toggle('active', k === i); });
+                dots.forEach(function(d, k){ d.classList.toggle('active', k === i); });
+                captionEl.textContent = CAPTIONS[i];
+                countUp(scenes[i]);
+            }
+            function render(){
+                let i = STARTS.length - 1;
+                for(let k = 0; k < STARTS.length; k++){ if(elapsed < STARTS[k] + DUR[k]){ i = k; break; } }
+                setScene(i);
+                progressEl.style.width = (elapsed / TOTAL * 100) + '%';
+            }
+            function loop(now){
+                if(!playing) return;
+                if(last == null) last = now;
+                elapsed += now - last; last = now;
+                if(elapsed >= TOTAL){ elapsed = TOTAL; render(); pause(true); return; }
+                render(); raf = requestAnimationFrame(loop);
+            }
+            function play(){
+                if(elapsed >= TOTAL) elapsed = 0;
+                playing = true; hasPlayed = true; last = null; playBtn.textContent = '❚❚ Pause';
+                raf = requestAnimationFrame(loop);
+            }
+            function pause(ended){
+                playing = false; cancelAnimationFrame(raf);
+                playBtn.textContent = ended ? '↻ Replay' : '▶ Play';
+            }
+            function seek(ms){
+                elapsed = Math.max(0, Math.min(TOTAL - 1, ms)); current = -1; last = null; render();
+                if(!playing) playBtn.textContent = '▶ Play';
+            }
+            playBtn.addEventListener('click', function(){ playing ? pause(false) : play(); });
+
+            render();
+            if(!reduce && 'IntersectionObserver' in window){
+                const io = new IntersectionObserver(function(entries){
+                    entries.forEach(function(e){
+                        if(e.isIntersecting && !hasPlayed) play();
+                        else if(!e.isIntersecting && playing) pause(false);
+                    });
+                }, { threshold: 0.5 });
+                io.observe(stage);
+            }
+        })();
     </script>
 </body>
 </html>
