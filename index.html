@@ -838,6 +838,101 @@
             font-weight: 500;
         }
 
+        /* --- Example gallery (cross-property reasoning) --- */
+        .section-lead {
+            max-width: 760px;
+            margin: 1.25rem auto 0;
+            text-align: center;
+            font-size: 1.02rem;
+            line-height: 1.7;
+            color: var(--color-text-muted);
+        }
+        .example-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 1.25rem 2rem 0;
+            background: var(--color-bg-alt);
+        }
+        .example-tab {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            padding: 0.5rem 0.9rem;
+            border-radius: 999px;
+            border: 1px solid var(--color-border);
+            background: white;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .example-tab:hover { color: var(--color-text); }
+        .example-tab.active {
+            background: var(--color-text);
+            color: white;
+            border-color: var(--color-text);
+        }
+        .example-panel { display: none; }
+        .example-panel.active { display: grid; grid-template-columns: 1fr 1fr; min-height: 400px; }
+        .example-image img {
+            width: 100%;
+            height: 100%;
+            max-height: 420px;
+            object-fit: cover;
+            border-radius: 12px;
+        }
+        .cross-props { margin-top: 1rem; }
+        .cross-props-label {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+        .prop-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.78rem;
+            font-weight: 500;
+            padding: 0.3rem 0.7rem;
+            margin: 0 0.35rem 0.35rem 0;
+            border-radius: 999px;
+            background: var(--color-bg-alt);
+            border: 1px solid var(--color-border);
+        }
+        .prop-chip .dot { width: 8px; height: 8px; border-radius: 50%; }
+        .prop-chip.material  .dot { background: var(--color-taxonomy-material); }
+        .prop-chip.physical  .dot { background: var(--color-taxonomy-physical); }
+        .prop-chip.affordance .dot { background: var(--color-taxonomy-affordance); }
+        .prop-chip.function  .dot { background: var(--color-taxonomy-function); }
+        .reasoning-steps { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; margin-top: 0.5rem; }
+        .reasoning-step { display: flex; gap: 0.75rem; align-items: flex-start; }
+        .reasoning-step .step-pillar {
+            flex-shrink: 0;
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            margin-top: 0.1rem;
+            min-width: 84px;
+            text-align: center;
+        }
+        .step-pillar.material   { background: var(--color-taxonomy-material); }
+        .step-pillar.physical   { background: var(--color-taxonomy-physical); }
+        .step-pillar.affordance { background: var(--color-taxonomy-affordance); }
+        .step-pillar.function   { background: var(--color-taxonomy-function); }
+        .reasoning-step p { font-size: 0.92rem; color: var(--color-text-muted); line-height: 1.6; }
+        .flow-arrow { text-align: center; color: var(--color-text-muted); font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; margin: 0.25rem 0; }
+        @media (max-width: 768px) {
+            .example-panel.active { grid-template-columns: 1fr; }
+            .reasoning-step .step-pillar { min-width: 70px; }
+        }
+
         /* Citation Section */
         #citation {
             background: var(--color-bg-alt);
@@ -1183,32 +1278,124 @@
             <h2 class="section-title">Taxonomy Reasoning in Action</h2>
         </div>
 
+        <p class="section-lead">Every question deliberately <strong>crosses several physical properties</strong>. Solving it requires reasoning <em>through</em> those properties — not just recognizing the object. Each example below shows the full chain: <strong>Question&nbsp;(which properties cross)&nbsp;→&nbsp;Reasoning&nbsp;with&nbsp;properties&nbsp;→&nbsp;Answer</strong>. The candidate objects are marked by colored boxes in the image.</p>
+
         <div class="example-container animate-on-scroll">
-            <div class="example-header">
-                <span class="example-dot"></span>
-                <span class="example-dot"></span>
-                <span class="example-dot"></span>
+            <div class="example-tabs" role="tablist">
+                <button class="example-tab active" data-panel="ex-reflector">Improvised reflector</button>
+                <button class="example-tab" data-panel="ex-setsub">Set subtraction</button>
+                <button class="example-tab" data-panel="ex-stepstool">Improvised step-stool</button>
+                <button class="example-tab" data-panel="ex-water">Water-damage</button>
             </div>
-            <div class="example-body">
-                <div class="example-image">
-                    <div class="example-image-placeholder">
-                        🏢 Office Scene with Multiple Objects<br>
-                        (monitor, bin, notebook, vending machine)
-                    </div>
-                </div>
+
+            <!-- Panel 1: Reflector -->
+            <div class="example-panel active" id="ex-reflector">
+                <div class="example-image"><img src="static/examples/reflector.jpg" alt="Street scene with a van, house exterior, and backdrop marked by colored boxes"></div>
                 <div class="example-qa">
                     <div class="example-question">
-                        <p class="example-question-label">Question</p>
-                        <p>Which object can be used as a shield? Imagine a sudden impact toward you, what item in this scene could you hold to defend yourself?</p>
+                        <p class="example-question-label">Question · crosses 3 properties</p>
+                        <p>If you must illuminate a shadowed area, which nearby object could be used as a reflector?</p>
+                    </div>
+                    <div class="cross-props">
+                        <p class="cross-props-label">Properties in play</p>
+                        <span class="prop-chip material"><span class="dot"></span>Material</span>
+                        <span class="prop-chip physical"><span class="dot"></span>Physical</span>
+                        <span class="prop-chip affordance"><span class="dot"></span>Affordance</span>
                     </div>
                     <div class="example-reasoning">
-                        <p class="example-reasoning-label">Taxonomy Reasoning</p>
-                        <p>A good improvised shield should have: a <strong>broad and flat surface</strong> to cover the torso or head, be <strong>rigid and durable</strong> enough to withstand impact, and be <strong>light enough to move quickly</strong>.<br><br>
-                        The notebook has a flat, rigid surface that is portable. The vending machine has a large rigid surface but is far too heavy to move. Therefore, the notebook could be repurposed as a shield.</p>
+                        <p class="example-reasoning-label">Reasoning with properties</p>
+                        <ul class="reasoning-steps">
+                            <li class="reasoning-step"><span class="step-pillar material">Material</span><p>A reflector needs a smooth, non-porous surface — painted metal bounces light, unlike rough brick or matte stone.</p></li>
+                            <li class="reasoning-step"><span class="step-pillar physical">Physical</span><p>The surface must be large and flat to redirect light across a wide area.</p></li>
+                            <li class="reasoning-step"><span class="step-pillar affordance">Affordance</span><p>Of the marked objects, only the van offers a broad glossy metal panel; the house exterior is rough masonry and the backdrop is matte.</p></li>
+                        </ul>
                     </div>
                     <div class="example-answer">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                        Answer: Notebook (Green Box)
+                        Answer: Van
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 2: Set subtraction -->
+            <div class="example-panel" id="ex-setsub">
+                <div class="example-image"><img src="static/examples/setsub.jpg" alt="Outdoor market with stalls, a vendor, and a person marked by colored boxes"></div>
+                <div class="example-qa">
+                    <div class="example-question">
+                        <p class="example-question-label">Question · crosses 2 properties</p>
+                        <p>Which object is solid and movable, but clearly not intended to hold other things?</p>
+                    </div>
+                    <div class="cross-props">
+                        <p class="cross-props-label">Properties in play</p>
+                        <span class="prop-chip physical"><span class="dot"></span>Physical</span>
+                        <span class="prop-chip function"><span class="dot"></span>Function</span>
+                    </div>
+                    <div class="example-reasoning">
+                        <p class="example-reasoning-label">Reasoning with properties</p>
+                        <ul class="reasoning-steps">
+                            <li class="reasoning-step"><span class="step-pillar physical">Physical</span><p>First keep objects that are both solid and movable — this rules out the person (not rigid).</p></li>
+                            <li class="reasoning-step"><span class="step-pillar function">Function</span><p>Then subtract anything whose purpose is containment. The market stall is a solid, relocatable display fixture — it holds nothing itself.</p></li>
+                        </ul>
+                    </div>
+                    <div class="example-answer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Answer: Market stall
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 3: Step-stool -->
+            <div class="example-panel" id="ex-stepstool">
+                <div class="example-image"><img src="static/examples/stepstool.jpg" alt="Indoor scene with a couch, a person, and a puzzle marked by colored boxes"></div>
+                <div class="example-qa">
+                    <div class="example-question">
+                        <p class="example-question-label">Question · crosses 3 properties</p>
+                        <p>Suppose there's no stool available — which sturdy object could someone stand on to reach upward?</p>
+                    </div>
+                    <div class="cross-props">
+                        <p class="cross-props-label">Properties in play</p>
+                        <span class="prop-chip physical"><span class="dot"></span>Physical</span>
+                        <span class="prop-chip affordance"><span class="dot"></span>Affordance</span>
+                        <span class="prop-chip function"><span class="dot"></span>Function</span>
+                    </div>
+                    <div class="example-reasoning">
+                        <p class="example-reasoning-label">Reasoning with properties</p>
+                        <ul class="reasoning-steps">
+                            <li class="reasoning-step"><span class="step-pillar physical">Physical</span><p>A stand-on substitute must be rigid and load-bearing, able to support an adult's weight.</p></li>
+                            <li class="reasoning-step"><span class="step-pillar affordance">Affordance</span><p>It also needs a flat, raised horizontal surface to stand on.</p></li>
+                            <li class="reasoning-step"><span class="step-pillar function">Function</span><p>The couch is built for seating — firm, elevated, weight-bearing — while the puzzle is flimsy and a person isn't a surface.</p></li>
+                        </ul>
+                    </div>
+                    <div class="example-answer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Answer: Couch
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 4: Water damage -->
+            <div class="example-panel" id="ex-water">
+                <div class="example-image"><img src="static/examples/water.jpg" alt="Person holding a wine glass with a cigarette nearby, marked by colored boxes"></div>
+                <div class="example-qa">
+                    <div class="example-question">
+                        <p class="example-question-label">Question · crosses 2 properties</p>
+                        <p>If someone accidentally spills water here, which object would be damaged first?</p>
+                    </div>
+                    <div class="cross-props">
+                        <p class="cross-props-label">Properties in play</p>
+                        <span class="prop-chip material"><span class="dot"></span>Material</span>
+                        <span class="prop-chip physical"><span class="dot"></span>Physical</span>
+                    </div>
+                    <div class="example-reasoning">
+                        <p class="example-reasoning-label">Reasoning with properties</p>
+                        <ul class="reasoning-steps">
+                            <li class="reasoning-step"><span class="step-pillar material">Material</span><p>Rank objects by water sensitivity — paper and pulp absorb water; glass and skin do not.</p></li>
+                            <li class="reasoning-step"><span class="step-pillar physical">Physical</span><p>The most porous, absorbent item degrades fastest. The wine glass is non-porous; the cigarette is paper-wrapped pulp that wicks water and falls apart.</p></li>
+                        </ul>
+                    </div>
+                    <div class="example-answer">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Answer: Cigarette
                     </div>
                 </div>
             </div>
@@ -1384,6 +1571,15 @@
             }
             
             lastScroll = currentScroll;
+        });
+
+        // Example gallery tabs
+        document.querySelectorAll('.example-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const target = tab.dataset.panel;
+                document.querySelectorAll('.example-tab').forEach(t => t.classList.toggle('active', t === tab));
+                document.querySelectorAll('.example-panel').forEach(p => p.classList.toggle('active', p.id === target));
+            });
         });
     </script>
 </body>
